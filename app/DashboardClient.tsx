@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Data, DDay, Schedule } from '@/lib/kv';
 import DdayCounter from '@/components/DdayCounter';
 import ScheduleList from '@/components/Schedule';
@@ -13,9 +13,33 @@ interface DashboardClientProps {
     initialData: Data;
 }
 
+const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('ko-KR', {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+};
+
+const formatDate = (date: Date) => {
+    return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+    });
+};
+
 export default function DashboardClient({ initialData }: DashboardClientProps) {
     const [data, setData] = useState<Data>(initialData);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const dataRef = useRef(data);
+
+    // Sync ref with state
+    useEffect(() => {
+        dataRef.current = data;
+    }, [data]);
 
     const fetchData = useCallback(async () => {
         try {
@@ -23,16 +47,16 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
             if (response.ok) {
                 const newData = await response.json();
                 // Only update if data is different to avoid unnecessary re-renders
-                if (JSON.stringify(newData) !== JSON.stringify(data)) {
+                if (JSON.stringify(newData) !== JSON.stringify(dataRef.current)) {
                     setData(newData);
                 }
             }
         } catch (error) {
             console.error('Failed to poll data:', error);
         }
-    }, [data]);
+    }, []);
 
-    const saveData = async (newData: Data) => {
+    const saveData = useCallback(async (newData: Data) => {
         try {
             const response = await fetch('/api/data', {
                 method: 'POST',
@@ -45,7 +69,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
         } catch (error) {
             console.error('Failed to save data:', error);
         }
-    };
+    }, []);
 
     // Polling every 3 seconds
     useEffect(() => {
@@ -61,41 +85,23 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
         return () => clearInterval(timer);
     }, []);
 
-    const handleAddDday = (dday: Omit<DDay, 'id'>) => {
+    const handleAddDday = useCallback((dday: Omit<DDay, 'id'>) => {
         const newDday = { ...dday, id: Date.now().toString() };
-        saveData({ ...data, ddays: [...data.ddays, newDday] });
-    };
+        saveData({ ...dataRef.current, ddays: [...dataRef.current.ddays, newDday] });
+    }, [saveData]);
 
-    const handleDeleteDday = (id: string) => {
-        saveData({ ...data, ddays: data.ddays.filter(d => d.id !== id) });
-    };
+    const handleDeleteDday = useCallback((id: string) => {
+        saveData({ ...dataRef.current, ddays: dataRef.current.ddays.filter(d => d.id !== id) });
+    }, [saveData]);
 
-    const handleAddSchedule = (schedule: Omit<Schedule, 'id'>) => {
+    const handleAddSchedule = useCallback((schedule: Omit<Schedule, 'id'>) => {
         const newSchedule = { ...schedule, id: Date.now().toString() };
-        saveData({ ...data, schedules: [...data.schedules, newSchedule] });
-    };
+        saveData({ ...dataRef.current, schedules: [...dataRef.current.schedules, newSchedule] });
+    }, [saveData]);
 
-    const handleDeleteSchedule = (id: string) => {
-        saveData({ ...data, schedules: data.schedules.filter(s => s.id !== id) });
-    };
-
-    const formatTime = (date: Date) => {
-        return date.toLocaleTimeString('ko-KR', {
-            hour12: true,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-    };
-
-    const formatDate = (date: Date) => {
-        return date.toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long'
-        });
-    };
+    const handleDeleteSchedule = useCallback((id: string) => {
+        saveData({ ...dataRef.current, schedules: dataRef.current.schedules.filter(s => s.id !== id) });
+    }, [saveData]);
 
     return (
         <main className="min-h-screen bg-[#FFF5F7] text-gray-800 p-4 md:p-8">
@@ -159,3 +165,4 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
         </main>
     );
 }
+

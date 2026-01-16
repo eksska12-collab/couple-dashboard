@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MapPin, Utensils, Coffee, Camera, Bike, RefreshCw, Sun, CloudRain, ShoppingBag, Clock, Navigation } from 'lucide-react';
+import { MapPin, Utensils, Coffee, Camera, Bike, RefreshCw, Sun, CloudRain, ShoppingBag, Clock, Navigation, Sparkles } from 'lucide-react';
 
 interface DateCourse {
     name: string;
