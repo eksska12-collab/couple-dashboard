@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Schedule } from '@/lib/storage';
+import { Schedule } from '@/lib/kv';
 import { Trash2, Plus, Calendar } from 'lucide-react';
 
 interface ScheduleProps {

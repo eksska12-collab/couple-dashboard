@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PersonalInfo as IPersonalInfo } from '@/lib/storage';
+import { PersonalInfo as IPersonalInfo } from '@/lib/kv';
 import { Eye, EyeOff, ShieldCheck, User, Phone } from 'lucide-react';
 
 interface PersonalInfoProps {

@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DDay } from '@/lib/storage';
+import { DDay } from '@/lib/kv';
 import { Trash2, Plus } from 'lucide-react';
 
 interface DdayCounterProps {
