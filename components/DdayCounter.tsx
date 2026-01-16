@@ -11,7 +11,7 @@ interface DdayCounterProps {
     onDelete: (id: string) => void;
 }
 
-export default function DdayCounter({ ddays, onAdd, onDelete }: DdayCounterProps) {
+const DdayCounter = React.memo(({ ddays, onAdd, onDelete }: DdayCounterProps) => {
     const [isAdding, setIsAdding] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
@@ -151,4 +151,6 @@ export default function DdayCounter({ ddays, onAdd, onDelete }: DdayCounterProps
             </div>
         </div>
     );
-}
+});
+
+export default DdayCounter;

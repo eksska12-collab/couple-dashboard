@@ -9,17 +9,17 @@ interface PersonalInfoProps {
     personalInfos: IPersonalInfo[];
 }
 
-export default function PersonalInfo({ personalInfos }: PersonalInfoProps) {
+const PersonalInfo = React.memo(({ personalInfos }: PersonalInfoProps) => {
     const [showAll, setShowAll] = useState(false);
 
-    const maskSSN = (ssn: string) => {
+    const maskSSN = (ssn: string): string => {
         if (showAll) return ssn;
         const [first, second] = ssn.split('-');
         if (!second) return ssn;
         return `${first}-${second[0]}******`;
     };
 
-    const maskPhone = (phone: string) => {
+    const maskPhone = (phone: string): string => {
         if (showAll) return phone;
         // Format: 010-7631-8033 -> 010-****-8033
         const parts = phone.split('-');
@@ -93,4 +93,6 @@ export default function PersonalInfo({ personalInfos }: PersonalInfoProps) {
             </div>
         </div>
     );
-}
+});
+
+export default PersonalInfo;

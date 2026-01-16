@@ -10,7 +10,10 @@ export async function GET() {
         }
         return NextResponse.json(data);
     } catch (error) {
-        console.error('Error fetching from KV:', error);
+        // 개발 환경에서만 에러 로깅
+        if (process.env.NODE_ENV === 'development') {
+            console.error('Error fetching from KV:', error);
+        }
         return NextResponse.json(DEFAULT_DATA);
     }
 }
@@ -21,7 +24,10 @@ export async function POST(request: Request) {
         await kv.set(KV_KEY, data);
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error saving to KV:', error);
+        // 개발 환경에서만 에러 로깅
+        if (process.env.NODE_ENV === 'development') {
+            console.error('Error saving to KV:', error);
+        }
         return NextResponse.json({ success: false, error: 'Failed to save data' }, { status: 500 });
     }
 }

@@ -52,7 +52,10 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                 }
             }
         } catch (error) {
-            console.error('Failed to poll data:', error);
+            // 에러 발생 시 조용히 무시 (프로덕션 환경)
+            if (process.env.NODE_ENV === 'development') {
+                console.error('Failed to poll data:', error);
+            }
         }
     }, []);
 
@@ -67,13 +70,16 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                 setData(newData);
             }
         } catch (error) {
-            console.error('Failed to save data:', error);
+            // 에러 발생 시 조용히 무시 (프로덕션 환경)
+            if (process.env.NODE_ENV === 'development') {
+                console.error('Failed to save data:', error);
+            }
         }
     }, []);
 
-    // Polling every 3 seconds
+    // Polling every 10 seconds (최적화: 3초 → 10초)
     useEffect(() => {
-        const interval = setInterval(fetchData, 3000);
+        const interval = setInterval(fetchData, 10000);
         return () => clearInterval(interval);
     }, [fetchData]);
 
