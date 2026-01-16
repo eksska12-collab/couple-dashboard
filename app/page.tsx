@@ -11,7 +11,10 @@ export default async function Home() {
       initialData = data;
     }
   } catch (error) {
-    console.error('Failed to fetch initial data from KV:', error);
+    // 개발 환경에서만 에러 로깅
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to fetch initial data from KV:', error);
+    }
   }
 
   return <DashboardClient initialData={initialData} />;

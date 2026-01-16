@@ -11,7 +11,7 @@ interface ScheduleProps {
     onDelete: (id: string) => void;
 }
 
-export default function ScheduleList({ schedules, onAdd, onDelete }: ScheduleProps) {
+const ScheduleList = React.memo(({ schedules, onAdd, onDelete }: ScheduleProps) => {
     const [isAdding, setIsAdding] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
@@ -95,4 +95,6 @@ export default function ScheduleList({ schedules, onAdd, onDelete }: SchedulePro
             </div>
         </div>
     );
-}
+});
+
+export default ScheduleList;
