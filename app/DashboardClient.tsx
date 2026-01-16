@@ -5,6 +5,8 @@ import { Data, DDay, Schedule } from '@/lib/kv';
 import DdayCounter from '@/components/DdayCounter';
 import ScheduleList from '@/components/Schedule';
 import PersonalInfo from '@/components/PersonalInfo';
+import Fortune from '@/components/Fortune';
+import DateRecommendation from '@/components/DateRecommendation';
 import { Heart, Clock } from 'lucide-react';
 
 interface DashboardClientProps {
@@ -129,13 +131,19 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                         </section>
                     </div>
 
-                    <div className="flex flex-col">
-                        <section className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-100 h-full">
+                    <div className="flex flex-col gap-6 md:gap-8">
+                        <section className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-100">
                             <ScheduleList
                                 schedules={data.schedules}
                                 onAdd={handleAddSchedule}
                                 onDelete={handleDeleteSchedule}
                             />
+                        </section>
+                        <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+                            <Fortune />
+                        </section>
+                        <section className="animate-in fade-in slide-in-from-bottom-4 duration-800 delay-400">
+                            <DateRecommendation />
                         </section>
                     </div>
                 </div>
